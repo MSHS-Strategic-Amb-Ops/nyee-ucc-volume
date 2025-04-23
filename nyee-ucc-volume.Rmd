@@ -417,8 +417,10 @@ daily_vol <- access_raw_tbl %>%
   group_by(year_month, DEPARTMENT_NAME, CONTACT_DATE) %>%
   summarise(total_vol = n()) %>%
   collect() %>%
+  mutate(appt_day = weekdays(CONTACT_DATE)) %>%
   arrange(CONTACT_DATE) %>%
-  mutate(CONTACT_DATE = as.character(CONTACT_DATE))
+  mutate(CONTACT_DATE = as.character(CONTACT_DATE)) %>%
+  dplyr::select(year_month, DEPARTMENT_NAME, CONTACT_DATE, appt_day, total_vol)
 
 
 
@@ -457,16 +459,20 @@ reactable(
 
     year_month = colDef(
       name = "Year-Month",
-      maxWidth = 220),
+      maxWidth = 200),
 
     DEPARTMENT_NAME = colDef(
       # footer = "Total",
       name = "Department",
-      maxWidth = 500),
+      maxWidth = 300),
     
     CONTACT_DATE = colDef(
       name = "Appointment Date",
-      maxWidth = 300),
+      maxWidth = 200),
+    
+    appt_day = colDef(
+      name = "Day of Week",
+      maxWidth = 200),
 
     total_vol = colDef(
       name = "Total Volume",

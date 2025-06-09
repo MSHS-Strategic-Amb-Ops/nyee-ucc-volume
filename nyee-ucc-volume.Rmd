@@ -464,6 +464,10 @@ reactable(
       name = "Department",
       maxWidth = 300),
     
+    appt_year = colDef(
+      name = "Year",
+      maxWidth = 200),
+    
     year_month = colDef(
       name = "Year-Month",
       maxWidth = 200),

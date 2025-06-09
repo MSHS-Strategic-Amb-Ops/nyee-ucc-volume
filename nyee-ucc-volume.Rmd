@@ -384,7 +384,7 @@ clarity_ser_2 <- clarity_ser_2_tbl %>%
 
 report_run_date <- Sys.Date()
 todays_month <- paste0(format(report_run_date, "%Y-%m"), "-01") 
-start_date <- "2025-04-01"
+start_date <- "2025-01-01"
 
 ucc_dept_id <- c(8164025, 8314001, 8087001)
 

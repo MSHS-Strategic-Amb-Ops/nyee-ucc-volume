@@ -386,7 +386,7 @@ report_run_date <- Sys.Date()
 todays_month <- paste0(format(report_run_date, "%Y-%m"), "-01") 
 start_date <- "2025-04-01"
 
-ucc_dept_id <- 8164025
+ucc_dept_id <- c(8164025, 8314001, 8087001)
 
 ```
 
@@ -409,18 +409,18 @@ ________________________________________________________________________________
 daily_vol <- access_raw_tbl %>%
   filter(CONTACT_DATE >= TO_DATE(start_date, "YYYY-MM-DD HH24:MI:SS")) %>%
   filter(CONTACT_DATE <= TO_DATE(report_run_date, "YYYY-MM-DD HH24:MI:SS")) %>%
-  filter(DEPARTMENT_ID == ucc_dept_id) %>%
+  filter(DEPARTMENT_ID %in% ucc_dept_id) %>%
   filter(DERIVED_STATUS_DESC == "Arrived") %>%
   mutate(appt_year = year(CONTACT_DATE),
          appt_month = month(CONTACT_DATE),
          year_month = paste0(appt_year,"-",appt_month)) %>%
-  group_by(year_month, DEPARTMENT_NAME, CONTACT_DATE) %>%
+  group_by(DEPARTMENT_NAME, year_month, CONTACT_DATE) %>%
   summarise(total_vol = n()) %>%
   collect() %>%
   mutate(appt_day = weekdays(CONTACT_DATE)) %>%
   arrange(CONTACT_DATE) %>%
   mutate(CONTACT_DATE = as.character(CONTACT_DATE)) %>%
-  dplyr::select(year_month, DEPARTMENT_NAME, CONTACT_DATE, appt_day, total_vol)
+  dplyr::select(DEPARTMENT_NAME, year_month, CONTACT_DATE, appt_day, total_vol)
 
 
 
@@ -453,18 +453,18 @@ reactable(
     wrap = TRUE,
   searchable = TRUE,
 
-  groupBy = c("year_month"),
+  groupBy = c("DEPARTMENT_NAME", "year_month"),
 
   columns = list(
-
-    year_month = colDef(
-      name = "Year-Month",
-      maxWidth = 200),
 
     DEPARTMENT_NAME = colDef(
       # footer = "Total",
       name = "Department",
       maxWidth = 300),
+    
+    year_month = colDef(
+      name = "Year-Month",
+      maxWidth = 200),
     
     CONTACT_DATE = colDef(
       name = "Appointment Date",

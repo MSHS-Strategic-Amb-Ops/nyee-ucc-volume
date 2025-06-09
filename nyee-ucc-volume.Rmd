@@ -399,7 +399,7 @@ knitr::include_graphics("Mount_Sinai_Logo_H.png")
 
 # MSHS Urgent Care Volume {.tabset .tabset-fade .tabset-pills}
 *Report run date: `r report_run_date`*<br/>
-*Includes EPIC DEP 310 E 14TH ST URGENT CARE [8164025]*<br/>
+*Includes EPIC DEP 310 E 14TH ST URGENT CARE [8164025], 638 COLUMBUS AVE URGENT CARE [8314001], and 310 E 14TH ST URGENT CARE [8087001]*<br/>
 ______________________________________________________________________________________________________________________________
 <br/>
 <br/>

@@ -408,19 +408,21 @@ ________________________________________________________________________________
 
 daily_vol <- access_raw_tbl %>%
   filter(CONTACT_DATE >= TO_DATE(start_date, "YYYY-MM-DD HH24:MI:SS")) %>%
-  filter(CONTACT_DATE <= TO_DATE(report_run_date, "YYYY-MM-DD HH24:MI:SS")) %>%
+  filter(CONTACT_DATE < TO_DATE(todays_month, "YYYY-MM-DD HH24:MI:SS")) %>%
   filter(DEPARTMENT_ID %in% ucc_dept_id) %>%
   filter(DERIVED_STATUS_DESC == "Arrived") %>%
   mutate(appt_year = year(CONTACT_DATE),
          appt_month = month(CONTACT_DATE),
          year_month = paste0(appt_year,"-",appt_month)) %>%
-  group_by(DEPARTMENT_NAME, year_month, CONTACT_DATE) %>%
+  group_by(DEPARTMENT_NAME, DEPARTMENT_ID, appt_year, year_month, CONTACT_DATE) %>%
   summarise(total_vol = n()) %>%
   collect() %>%
   mutate(appt_day = weekdays(CONTACT_DATE)) %>%
   arrange(CONTACT_DATE) %>%
   mutate(CONTACT_DATE = as.character(CONTACT_DATE)) %>%
-  dplyr::select(DEPARTMENT_NAME, year_month, CONTACT_DATE, appt_day, total_vol)
+  dplyr::select(DEPARTMENT_NAME, DEPARTMENT_ID, appt_year, year_month, CONTACT_DATE, appt_day, total_vol) %>%
+  mutate(avg_vol = total_vol) %>%
+  filter(!(DEPARTMENT_ID == 8164025 & CONTACT_DATE == "2025-04-08"))
 
 
 
@@ -478,7 +480,15 @@ reactable(
       name = "Total Volume",
       aggregate = 'sum',
       format = colFormat(separators = TRUE, digits = 0),
-      maxWidth = 200)
+      maxWidth = 200),
+    
+    avg_vol = colDef(
+      name = "Avg Daily Volume",
+      aggregate = 'mean',
+      format = colFormat(separators = TRUE, digits = 0),
+      maxWidth = 200),
+    
+    DEPARTMENT_ID = colDef(show = F)
 
 
   ) # Close Columns

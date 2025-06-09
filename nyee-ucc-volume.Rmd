@@ -455,7 +455,7 @@ reactable(
     wrap = TRUE,
   searchable = TRUE,
 
-  groupBy = c("DEPARTMENT_NAME", "year_month"),
+  groupBy = c("DEPARTMENT_NAME", "Year", "year_month"),
 
   columns = list(
 
